@@ -1,0 +1,14 @@
+//option optimize_for = LITE_RUNTIME;
+
+package antifraud;
+
+message PluginInfo {
+  required string name = 1;
+  required string path = 2;
+  optional string create_symbol = 3;
+  optional string delete_symbol = 4;
+}
+
+message PluginSet {
+  repeated PluginInfo plugins = 1;  
+}

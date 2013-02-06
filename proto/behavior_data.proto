@@ -1,0 +1,8 @@
+option optimize_for = LITE_RUNTIME;
+
+package antifraud;
+
+message BehaviorData {
+  repeated int64 timestamps = 1;
+}
+

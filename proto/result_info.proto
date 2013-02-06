@@ -1,0 +1,8 @@
+option optimize_for = LITE_RUNTIME;
+
+package antifraud;
+
+message ResultInfo {
+  optional bool flag = 1;
+}
+
