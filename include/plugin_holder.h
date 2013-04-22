@@ -15,7 +15,7 @@
 #include "base/port.h"
 #include "plugin_factory.h"
 
-namespace ad_processor {
+namespace antifraud {
 
 template <typename T>
 class PluginPtr {

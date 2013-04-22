@@ -19,7 +19,7 @@
 #include "base/mutex.h"
 #include "logging_wrapper.h"
 
-namespace ad_processor {
+namespace antifraud {
 
 struct PluginInfo {
   std::string name_;
