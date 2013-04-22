@@ -8,45 +8,73 @@
 *
 ================================================================*/
 
-#ifndef ANTIFRAUD_PLUGIN_HOLDER_H_
-#define ANTIFRAUD_PLUGIN_HOLDER_H_
+#ifndef PLUGIN_HOLDER_H_
+#define PLUGIN_HOLDER_H_
 
 #include <string>
-#include "iplugin.h"
+#include "base/port.h"
+#include "plugin_factory.h"
 
-namespace antifraud {
+namespace ad_processor {
 
-class PluginHolder {
+template <typename T>
+class PluginPtr {
 public:
-  explicit PluginHolder() : ptr_(NULL) {}
-  ~PluginHolder();
+  explicit PluginPtr() : ptr_(NULL) {}
+  ~PluginPtr() {
+    PluginFactory<T>::DelPlugin(name_, ptr_);
+    ptr_ = NULL;
+  }
 
-  void reset(const std::string& name);
+  const std::string& name() {
+    return name_;
+  }
+
+  void reset(const std::string& name) {
+    if (ptr_ != NULL) {
+      PluginFactory<T>::DelPlugin(name_, ptr_);
+    }
+    name_ = name;
+    ptr_ = PluginFactory<T>::GetPlugin(name);
+  }
+
+  T* get() const { return ptr_; }
 
   // Accessors to get the owned object.
-  IPlugin& operator*() const {
+  T& operator*() const {
     assert(ptr_ != NULL);
     return *ptr_;
   }
-  IPlugin* operator->() const {
+  T* operator->() const {
     assert(ptr_ != NULL);
     return ptr_;
   }
  
   // Comparison operators.
-  bool operator==(IPlugin* p) const { return ptr_ == p; }
-  bool operator!=(IPlugin* p) const { return ptr_ != p; }
+  bool operator==(T* p) const { return ptr_ == p; }
+  bool operator!=(T* p) const { return ptr_ != p; }
+
+  void swap(PluginPtr& other) {
+    T* tmp = ptr_;
+    ptr_ = other.ptr_;
+    other.ptr_ = tmp;
+  }
+
+  T* release() WARN_UNUSED_RESULT {
+    T* p = ptr_;
+    ptr_ = NULL;
+    return p;
+  }
 
 private:
-  IPlugin* ptr_;
+  T* ptr_;
   std::string name_;
 
-  PluginHolder(const PluginHolder&);
-  void operator=(const PluginHolder&);
+  PluginPtr(const PluginPtr&);
+  void operator=(const PluginPtr&);
 };
 
-typedef PluginHolder PluginPtr;
 
-}  // end namespace
+}
 
-#endif  // ANTIFRAUD_PLUGIN_HOLDER_H_
+#endif  // PLUGIN_HOLDER_H_

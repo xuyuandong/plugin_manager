@@ -21,11 +21,11 @@ DEFINE_string(conf_file, "plugins.conf", "config file for test");
 int main(int argc, char* argv[]) {
   base::ParseCommandLineFlags(&argc, &argv, true);
 
-  PluginFactory factory;
-  factory.Init(FLAGS_conf_file);
+  PluginFactory<IPlugin> factory;
+  factory::Init(FLAGS_conf_file);
 
   //IPlugin* ptr = (factory.GetPlugin("RulePlugin"));
-  PluginPtr ptr;
+  PluginPtr<IPlugin> ptr;
   ptr.reset("RulePlugin");
   ptr->Init(FLAGS_conf_file);
 
